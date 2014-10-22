@@ -1,0 +1,23 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<script src="scripts/filter-date.js"></script>
+<polymer-element name="uql-hold-item" attributes="item view">
+  <template>
+    <link rel="stylesheet" href="uql-loans-info.css">
+    <paper-item horizontal>
+      <span flex>
+        <div class="itemPrimaryText">{{ item.title }}</div>
+        <div class="itemSecondaryText">Date Placed: {{ item.datePlaced | date('dd/MM/yyyy') }}</div>
+      </span>
+      <core-icon hidden class="infoIcon" icon="info-outline" horizontal layout end></core-icon>
+    </paper-item>
+  </template>
+
+  <script>
+    Polymer('uql-hold-item', {
+      view : 'full'
+    });
+
+  </script>
+
+</polymer-element>

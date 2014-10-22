@@ -1,0 +1,63 @@
+<link rel="import" href="uql-loan-item.html">
+<link rel="import" href="uql-info-item.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dialog/paper-dialog-transition.html">
+
+<polymer-element name="uql-loans" attributes="loans view">
+
+  <template>
+    <link rel="stylesheet" href="uql-loans-info.css">
+    <div id="teaser" hidden?="{{view != 'teaser'}}">
+      <paper-item icon="alarm" on-click="{{toggleView}}" horizontal>
+        <span flex>My loans ({{ loans.length }})</span>
+        <core-icon icon="chevron-right" horizontal layout end></core-icon>
+      </paper-item>
+    </div>
+
+    <div id="full" hidden?="{{view != 'full'}}">
+
+      <section id="details" name="details"  vertical>
+        <paper-dialog id="detailsDialog" transition="paper-dialog-transition-center" autoCloseDisabled="true">
+          <div id="detailsWrapper">
+            <div horizontal center-justified layout>
+              <uql-info-item id="itemDetails" item="{{item}}">
+                <div class="subtitle">
+                  Due Date: {{ item.dueDate | date('dd/MM/yyyy') }}<br>
+                </div>
+                <paper-button raised class="closeButton" on-click="{{toggleDetails}}"><core-icon icon="close"></core-icon>Close</paper-button>
+              </uql-info-item>
+            </div>
+          </div>
+        </paper-dialog>
+      </section>
+
+      <div class="itemsList" block?="{{ loans.length > 0 }}">
+        <template repeat="{{ loan in loans }}">
+          <div class="listItem">
+            <uql-loan-item item="{{loan}}" on-click="{{toggleDetails}}" view="{{view}}"></uql-loan-item>
+          </div>
+        </template>
+      </div>
+    </div>
+
+
+  </template>
+
+  <script>
+    Polymer('uql-loans', {
+
+      toggleView : function(event, detail, sender) {
+        this.fire('toggle-view', {source : 'loans'});
+        return false;
+      },
+      toggleDetails : function(event, detail, sender) {
+        this.$.itemDetails.item = sender.item;
+        this.$.detailsDialog.toggle();
+      }
+
+    });
+
+  </script>
+
+</polymer-element>

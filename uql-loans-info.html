@@ -1,0 +1,147 @@
+<!--
+@group Paper Elements
+
+Material Design: <a href="http://www.google.com/design/spec/components/buttons.html">Buttons</a>
+
+`paper-button` is a button. When the user touches the button, a ripple effect emanates
+from the point of contact. It may be flat or raised. A raised button is styled with a
+shadow.
+
+Example:
+
+    <paper-button>flat button</paper-button>
+    <paper-button raised>raised button</paper-button>
+
+You may use custom DOM in the button body to create a variety of buttons. For example, to
+create a button with an icon and some text:
+
+    <paper-button>
+      <core-icon icon="favorite">
+      custom button content
+    </paper-button>
+
+Styling
+-------
+
+Style the button with CSS as you would a normal DOM element.
+
+    /* make #my-button green with yellow text */
+    #my-button {
+        background: green;
+        color: yellow;
+    }
+
+By default, the ripple is the same color as the foreground at 25% opacity. You may
+customize the color using this selector:
+
+    /* make #my-button use a blue ripple instead of foreground color */
+    #my-button::shadow #ripple {
+      color: blue;
+    }
+
+The opacity of the ripple is not customizable via CSS.
+
+@element paper-button
+@extends paper-button-base
+@status unstable
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tabs/paper-tab.html">
+<link rel="import" href="../core-header-panel/core-header-panel.html">
+<link rel="import" href="../core-toolbar/core-toolbar.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../core-animated-pages/core-animated-pages.html">
+<link rel="import" href="../core-animated-pages/transitions/slide-from-right.html">
+
+
+<link rel="import" href="uql-holds.html">
+<link rel="import" href="uql-fines.html">
+<link rel="import" href="uql-loans.html">
+
+
+<polymer-element name="uql-loans-info" layout center attributes="apiUrl">
+  <template>
+
+    <core-ajax auto url="{{ apiUrl }}"
+               params=''
+               id="ajax"
+               handleAs="json" on-core-response="{{ infoLoaded }}"></core-ajax>
+
+    <link rel="stylesheet" href="uql-loans-info.css">
+    <core-header-panel vertival layout mode="waterfall">
+      <core-toolbar>
+        <paper-tabs id="tabs" selected="{{ selectedTab }}" on-core-select="{{ tabSelected }}">
+          <!--<paper-tab name="overview" id="overview">Overview</paper-tab>-->
+          <paper-tab name="loans" id="loans">Loans <span class="subtext">({{ loans.length }})</span></paper-tab>
+          <paper-tab name="holds" id="holds">Holds <span class="subtext">{{ holds.length }}</span></paper-tab>
+          <paper-tab name="fines" id="fines">Fines <span class="subtext">{{ sumFines }}</span></paper-tab>
+        </paper-tabs>
+      </core-toolbar>
+
+      <div class="infoWrapper">
+        <core-animated-pages id="animatedPages" transitions="slide-from-right" block on-core-animated-pages-transition-end="{{transitionEnd}}">
+
+          <section id="overview" name="overview" hidden?="{{ selectedTab != 'overview'}}">
+            <div>
+              <uql-loans loans="{{ loans }}" view="teaser"></uql-loans>
+            </div>
+            <div>
+              <uql-holds holds="{{ holds }}" view="teaser"></uql-holds>
+            </div>
+            <div>
+              <uql-fines id="finesTeaser" fines="{{ fines }}" view="teaser"></uql-fines>
+            </div>
+          </section>
+
+          <section id="loans" name="loans" class="loans" hidden?="{{ selectedTab != 'loans' }}">
+            <uql-loans loans="{{ loans }}"></uql-loans>
+          </section>
+
+          <section id="holds" name="holds" class="holds" hidden?="{{ selectedTab != 'holds' }}">
+            <uql-holds holds="{{ holds }}"></uql-holds>
+          </section>
+
+          <section id="fines" name="fines" class="fines" hidden?="{{ selectedTab != 'fines' }}">
+            <uql-fines id="finesFull" view="full" fines="{{ fines }}"></uql-fines>
+          </section>
+
+        </core-animated-pages>
+
+     </div>
+    </core-header-panel>
+  </template>
+
+  <script>
+    Polymer('uql-loans-info', {
+      apiUrl : 'test/mock/info.json',
+      sumFines : 0,
+
+      selectedTab : 'overview',
+      infoLoaded : function() {
+        var response = this.$.ajax.response;
+        this.holds = (response.holds ? response.holds : []);
+        this.loans = (response.checkedOut ? response.checkedOut : []);
+        this.fines = (response.fines ? response.fines : []);
+        this.sumFines = this.$.finesTeaser.moneyFormat(this.$.finesTeaser.calculateFines(this.fines));
+      },
+
+      tabSelected : function() {
+        this.selectedTab = this.$.tabs.selected;
+        this.$.animatedPages.selected = this.$.tabs.selected;
+        this.fire('tab-changed');
+      },
+
+      ready: function() {
+        tabs = this.$.tabs;
+        this.$.overview.addEventListener('toggle-view', function(e) {
+          tabs.selected = e.detail.source;
+        });
+      }
+
+    });
+  </script>
+
+</polymer-element>

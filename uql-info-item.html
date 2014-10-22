@@ -1,0 +1,19 @@
+<link rel="import" href="../core-icon-button/core-icon-button.html">
+<polymer-element name="uql-info-item" attributes="item">
+  <template>
+    <link rel="stylesheet" href="card.css">
+    <div class="card">
+      <h3>{{ item.title }}</h3>
+      <div class="subtitle"><content select=".subtitle"></content></div>
+      <a href="{{ item.url }}" target="_blank"><paper-button raised class="actionButton">View item <core-icon icon="open-in-new"></paper-button></a>
+      <content></content>
+    </div>
+  </template>
+
+  <script>
+    Polymer('uql-info-item', {
+      item:  {}
+    });
+
+  </script>
+</polymer-element>

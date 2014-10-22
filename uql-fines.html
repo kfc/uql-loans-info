@@ -1,0 +1,96 @@
+<link rel="import" href="uql-fine-item.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../core-animated-pages/core-animated-pages.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dialog/paper-dialog-transition.html">
+
+<polymer-element name="uql-fines">
+
+  <template>
+    <link rel="stylesheet" href="uql-loans-info.css">
+    <div id="teaser" hidden?="{{view != 'teaser'}}">
+      <paper-item icon="error" on-click="{{toggleView}}">
+        <span flex>My fines ({{ calculateFines(fines) | moneyFormat }})</span>
+        <core-icon icon="chevron-right" horizontal layout end></core-icon>
+      </paper-item>
+    </div>
+
+    <div id="full" hidden?="{{view != 'full'}}">
+
+      <section id="details" name="details"  vertical>
+        <paper-dialog id="detailsDialog" transition="paper-dialog-transition-center">
+          <div id="detailsWrapper">
+            <div horizontal center-justified layout>
+              <uql-info-item id="itemDetails" item="{{item}}">
+                <div class="subtitle">
+                  Due Date: {{ item.dueDate | date('dd/MM/yyyy') }}<br>
+                  Date Returned: {{ item.dateReturned | date('dd/MM/yyyy') }}<br>
+                  Fine Amount: {{ item.fineAmount | moneyFormat }}
+                </div>
+                <paper-button raised class="closeButton" on-click="{{toggleDetails}}"><core-icon icon="close"></core-icon>Close</paper-button>
+              </uql-info-item>
+            </div>
+          </div>
+        </paper-dialog>
+      </section>
+
+      <section name="list" hidden?="{{view != 'full'}}">
+        <div class="itemsList" style="position: relative;" block?="{{ fines.length > 0 }}">
+          <template repeat="{{ fine in fines }}">
+            <div class="listItem">
+              <uql-fine-item on-click="{{toggleDetails}}" item="{{fine}}" view="{{view}}"></uql-fine-item>
+            </div>
+          </template>
+        </div>
+      </section>
+    </div>
+  </template>
+
+  <script>
+    Polymer('uql-fines', {
+      publish : {
+        fines : {
+          value : [],
+          reflect : true
+        },
+        finesSum : 0,
+        view : 'full'
+
+      },
+      toggleView : function(event, detail, sender) {
+        this.fire('toggle-view', {source : 'fines'});
+        return false;
+      },
+
+      ready : function() {
+        this.calculateFines(this.fines);
+        this.$.detailsDialog.addEventListener('tab-changed', function() {
+          console.log('44');
+
+        });
+      },
+
+      toggleDetails : function(event, detail, sender) {
+        this.$.itemDetails.item = sender.item;
+        this.$.detailsDialog.toggle();
+      },
+
+      calculateFines : function(fines) {
+        this.finesSum = 0;
+        if(fines.length > 0) {
+          for(var i=0; i < this.fines.length; i++){
+            if(fines[i].fineAmount) {
+              this.finesSum += parseInt(fines[i].fineAmount);
+            }
+          }
+        }
+        return this.finesSum;
+      },
+      moneyFormat: function(value) {
+        return '$' + (parseFloat(value) / 100) .toFixed(2);
+      }
+    });
+  </script>
+
+</polymer-element>

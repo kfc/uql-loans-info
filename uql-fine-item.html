@@ -1,0 +1,33 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-item/paper-item.html">
+
+<link rel="import" href="uql-info-item.html">
+
+<script src="scripts/filter-date.js"></script>
+
+<polymer-element name="uql-fine-item" attributes="item view">
+
+  <template>
+    <link rel="stylesheet" href="uql-loans-info.css">
+
+      <paper-item horizontal hidden?="{{ view != 'full'}}">
+          <span flex>
+            <div class="itemPrimaryText">{{ item.title }}</div>
+            <div class="itemSecondaryText">{{ item.fineAmount | moneyFormat }}</div>
+          </span>
+      <core-icon class="infoIcon" icon="info-outline" horizontal layout end></core-icon>
+    </paper-item>
+  </template>
+
+  <script>
+    Polymer('uql-fine-item', {
+      view : 'full',
+
+      moneyFormat: function(value) {
+        return '$' + (parseFloat(value) / 100) .toFixed(2);
+      }
+    });
+
+  </script>
+
+</polymer-element>

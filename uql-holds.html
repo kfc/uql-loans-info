@@ -1,0 +1,41 @@
+<link rel="import" href="uql-hold-item.html">
+<link rel="import" href="../paper-item/paper-item.html">
+
+<polymer-element name="uql-holds" attributes="holds view">
+
+  <template>
+    <link rel="stylesheet" href="uql-loans-info.css">
+
+    <div id="teaser" hidden?="{{view != 'teaser'}}">
+      <paper-item icon="lock" on-click="{{toggleView}}" horizontal>
+        <span flex>My holds ({{ holds.length }})</span>
+        <core-icon icon="chevron-right" horizontal layout end></core-icon>
+      </paper-item>
+    </div>
+
+    <div id="full" hidden?="{{view != 'full'}}">
+      <div class="itemsList" block?="{{ holds.length > 0 }}">
+        <template repeat="{{ hold in holds }}">
+          <div class="listItem">
+            <uql-hold-item item="{{hold}}" view="{{view}}"></uql-hold-item>
+          </div>
+        </template>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer('uql-holds', {
+      view : 'full',
+
+      toggleView : function(event, detail, sender) {
+        this.fire('toggle-view', {source : 'holds'});
+        return false;
+      }
+
+    });
+
+  </script>
+
+</polymer-element>
