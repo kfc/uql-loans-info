@@ -14,20 +14,27 @@
     </div>
 
     <div id="full" hidden?="{{view != 'full'}}">
-      <div class="itemsList" block?="{{ holds.length > 0 }}">
+      <div class="itemsList" hidden?="{{ holds.length == 0 }}">
         <template repeat="{{ hold in holds }}">
           <div class="listItem">
             <uql-hold-item item="{{hold}}" view="{{view}}"></uql-hold-item>
           </div>
         </template>
       </div>
+      <h4 horizontal center-justified layout hidden?="{{ holds.length > 0 }}">No Holds</h4>
     </div>
 
   </template>
 
   <script>
     Polymer('uql-holds', {
-      view : 'full',
+      publish: {
+        view : 'full',
+        holds: {
+          value : [],
+          reflect : true
+        }
+      },
 
       toggleView : function(event, detail, sender) {
         this.fire('toggle-view', {source : 'holds'});

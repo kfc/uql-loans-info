@@ -19,7 +19,7 @@
     <div id="full" hidden?="{{view != 'full'}}">
 
       <section id="details" name="details"  vertical>
-        <paper-dialog id="detailsDialog" transition="paper-dialog-transition-center">
+        <paper-dialog id="detailsDialog" transition="paper-dialog-transition-center" autoCloseDisabled="true">
           <div id="detailsWrapper">
             <div horizontal center-justified layout>
               <uql-info-item id="itemDetails" item="{{item}}">
@@ -36,13 +36,14 @@
       </section>
 
       <section name="list" hidden?="{{view != 'full'}}">
-        <div class="itemsList" style="position: relative;" block?="{{ fines.length > 0 }}">
+        <div class="itemsList" style="position: relative;" hidden?="{{ fines.length == 0 }}">
           <template repeat="{{ fine in fines }}">
             <div class="listItem">
               <uql-fine-item on-click="{{toggleDetails}}" item="{{fine}}" view="{{view}}"></uql-fine-item>
             </div>
           </template>
         </div>
+        <h4 horizontal center-justified layout hidden?="{{ fines.length > 0 }}">No Fines</h4>
       </section>
     </div>
   </template>
@@ -66,7 +67,6 @@
       ready : function() {
         this.calculateFines(this.fines);
         this.$.detailsDialog.addEventListener('tab-changed', function() {
-          console.log('44');
 
         });
       },
@@ -79,7 +79,7 @@
       calculateFines : function(fines) {
         this.finesSum = 0;
         if(fines.length > 0) {
-          for(var i=0; i < this.fines.length; i++){
+          for(var i=0; i < fines.length; i++){
             if(fines[i].fineAmount) {
               this.finesSum += parseInt(fines[i].fineAmount);
             }

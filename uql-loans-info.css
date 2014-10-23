@@ -64,3 +64,8 @@ paper-tabs#tabs .subtext {
     padding-top: 5px;
     color: #8e8e8e;
     font-size: 12px; }
+
+.infoIcon {
+    color: #8e8e8e;
+    width: 20px;
+}

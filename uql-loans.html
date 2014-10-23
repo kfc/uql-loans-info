@@ -14,7 +14,6 @@
         <core-icon icon="chevron-right" horizontal layout end></core-icon>
       </paper-item>
     </div>
-
     <div id="full" hidden?="{{view != 'full'}}">
 
       <section id="details" name="details"  vertical>
@@ -31,14 +30,16 @@
           </div>
         </paper-dialog>
       </section>
-
-      <div class="itemsList" block?="{{ loans.length > 0 }}">
-        <template repeat="{{ loan in loans }}">
-          <div class="listItem">
-            <uql-loan-item item="{{loan}}" on-click="{{toggleDetails}}" view="{{view}}"></uql-loan-item>
-          </div>
-        </template>
-      </div>
+      <section name="list">
+        <div class="itemsList" hidden?="{{ loans.length == 0 }}">
+          <template repeat="{{ loan in loans }}">
+            <div class="listItem">
+              <uql-loan-item item="{{loan}}" on-click="{{toggleDetails}}" view="{{view}}"></uql-loan-item>
+            </div>
+          </template>
+        </div>
+        <h4 horizontal center-justified layout hidden?="{{ loans.length > 0 }}">No Loans</h4>
+      </section>
     </div>
 
 
@@ -46,6 +47,14 @@
 
   <script>
     Polymer('uql-loans', {
+
+      publish: {
+        view : 'full',
+        loans: {
+          value : [],
+          reflect : true
+        }
+      },
 
       toggleView : function(event, detail, sender) {
         this.fire('toggle-view', {source : 'loans'});
