@@ -27,7 +27,7 @@
       <core-toolbar>
         <paper-tabs id="tabs" selected="{{ selectedTab }}" on-core-select="{{ tabSelected }}">
           <!--<paper-tab name="overview" id="overview">Overview</paper-tab>-->
-          <paper-tab name="loans" id="loans">Loans <span class="subtext">({{ data.loans.length }})</span></paper-tab>
+          <paper-tab name="loans" id="loans">Loans <span class="subtext">{{ data.loans.length }}</span></paper-tab>
           <paper-tab name="holds" id="holds">Holds <span class="subtext">{{ data.holds.length }}</span></paper-tab>
           <paper-tab name="fines" id="fines">Fines <span class="subtext">{{ sumFines }}</span></paper-tab>
         </paper-tabs>
