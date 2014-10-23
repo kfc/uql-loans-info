@@ -26,22 +26,14 @@ paper-tabs#tabs {
 paper-tabs#tabs .subtext {
     font-size: 11px; }
 
-#overview div:nth-child(odd) {
-    background-color: #FFF; }
-#overview div:nth-child(even) {
-    background-color: #f5f5f5; }
-
 #teaser paper-item {
-    height: 70px;
     border: 1px solid #f5f5f5;
     border-collapse: collapse; }
 
 #full paper-item {
     background: inherit; }
-#full .itemsList .listItem:nth-child(odd) {
-    background-color: #FFFFFF; }
-#full .itemsList .listItem:nth-child(even) {
-    background-color: #f5f5f5; }
+#full .itemsList div.listItem {
+    border-bottom: 1px solid #f5f5f5; }
 #full #detailsWrapper {
     padding: 5px; }
 #full .closeButton {
