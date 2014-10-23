@@ -26,8 +26,7 @@ paper-tabs#tabs {
 paper-tabs#tabs .subtext {
     font-size: 11px; }
 paper-tabs#tabs::shadow #selectionBar {
-    background-color: #5fa90a;
-}
+    background-color: #5fa90a; }
 
 #teaser paper-item {
     border: 1px solid #f5f5f5;
@@ -39,6 +38,8 @@ paper-tabs#tabs::shadow #selectionBar {
     border-bottom: 1px solid #f5f5f5; }
 #full #detailsWrapper {
     padding: 5px; }
+#full .closeButton {
+    margin-left: 0.1em; }
 #full #detailsDialog {
     position: absolute;
     width: 100%; }
