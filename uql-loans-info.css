@@ -28,6 +28,9 @@ paper-tabs#tabs .subtext {
 paper-tabs#tabs::shadow #selectionBar {
     background-color: #5fa90a; }
 
+paper-tab.core-selected {
+    color: #5fa90a; }
+
 #teaser paper-item {
     border: 1px solid #f5f5f5;
     border-collapse: collapse; }
