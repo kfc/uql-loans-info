@@ -27,9 +27,9 @@
       <core-toolbar>
         <paper-tabs id="tabs" selected="{{ selectedTab }}" on-core-select="{{ tabSelected }}">
           <!--<paper-tab name="overview" id="overview">Overview</paper-tab>-->
-          <paper-tab name="loans" id="loans">Loans <span class="subtext">{{ data.loans.length }}</span></paper-tab>
+          <paper-tab name="loans" id="loans">Loans <span class="subtext {{ data.loansOverdue > 0 ? 'alert' : data.dueSoon > 0 ? 'warning' : '' }}">{{ data.loans.length }}</span></paper-tab>
           <paper-tab name="holds" id="holds">Holds <span class="subtext">{{ data.holds.length }}</span></paper-tab>
-          <paper-tab name="fines" id="fines">Fines <span class="subtext">{{ sumFines }}</span></paper-tab>
+          <paper-tab name="fines" id="fines">Fines <span class="subtext {{ data.fines.length > 0 ? 'alert' : '' }}">{{ sumFines }}</span></paper-tab>
         </paper-tabs>
       </core-toolbar>
 
@@ -74,7 +74,9 @@
         data : {
           holds: [],
           loans: [],
-          fines: []
+          fines: [],
+          loansOverdue: 0,
+          dueSoon: 0
         }
       },
       sumFines : 0,
@@ -85,7 +87,7 @@
         this.data.holds = (response.holds ? response.holds : []);
         this.data.loans = (response.checkedOut ? response.checkedOut : []);
         this.data.fines = (response.fines ? response.fines : []);
-        this.sumFines = this.$.finesTeaser.moneyFormat(this.$.finesTeaser.calculateFines(this.data.fines));
+        this.processData();
       },
 
       tabSelected : function() {
@@ -99,7 +101,32 @@
         this.$.overview.addEventListener('toggle-view', function(e) {
           tabs.selected = e.detail.source;
         });
-        this.sumFines = this.$.finesTeaser.moneyFormat(this.$.finesTeaser.calculateFines(this.data.fines));
+        this.processData();
+      },
+
+      processData: function () {
+        this.data.loansOverdue = 0;
+        this.data.dueSoon = 0;
+        if(this.data) {
+          for (var i = 0; i < this.data.loans.length; i++) {
+            var _date = new Date(this.data.loans[i].dueDate);
+            var today = new Date();
+            var overdue = Math.ceil((_date - today) / (1000 * 60 * 60 * 24));
+
+            this.data.loans[i].daysRemain = -1;
+            if(overdue < 0) {
+              this.data.loans[i].isOverdue = true;
+              this.data.loans[i].daysOverdue = Math.abs(overdue);
+              this.data.loansOverdue ++;
+
+            }
+            else if(overdue >= 0 && overdue < 5 ) {
+              this.data.loans[i].daysRemain = overdue;
+              this.data.dueSoon ++;
+            }
+          }
+          this.sumFines = this.$.finesTeaser.moneyFormat(this.$.finesTeaser.calculateFines(this.data.fines));
+        }
       }
 
     });

@@ -9,7 +9,10 @@
     <paper-item horizontal>
         <span flex>
           <div class="itemPrimaryText">{{ item.title }}</div>
-          <div class="itemSecondaryText">Due Date: {{ item.dueDate | date('dd/MM/yyyy') }}</div>
+          <div class="itemSecondaryText">Due Date: {{ item.dueDate | date('dd/MM/yyyy') }}
+            <span class="alert" hidden?="{{ !item.daysOverdue }}">{{item.daysOverdue}} day(s) overdue</span>
+            <span class="warning" hidden?="{{ item.daysRemain < 0 }}">{{item.daysRemain}} day(s) remain</span>
+        </div>
         </span>
       <core-icon class="infoIcon" icon="info-outline" horizontal layout end></core-icon>
     </paper-item>

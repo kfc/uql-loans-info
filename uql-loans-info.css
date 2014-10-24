@@ -24,10 +24,16 @@ paper-tabs#tabs {
     font-size: 12px;
     display: block; }
 paper-tabs#tabs .subtext {
-    font-size: 11px; }
+    font-size: 11px;
+    margin-top: -6px;
+    margin-left: 2px;
+    position: absolute;
+}
+
 paper-tabs#tabs::shadow #selectionBar {
     background-color: #5fa90a; }
-
+paper-tab {
+    position: relative; }
 paper-tab.core-selected {
     color: #5fa90a; }
 paper-tab::shadow #ink {
@@ -65,6 +71,14 @@ paper-tab::shadow #ink::shadow #bg {
     padding-top: 5px;
     color: #8e8e8e;
     font-size: 12px; }
+
+.itemSecondaryText .alert, .itemSecondaryText .warning {
+    margin-left: 15px; }
+
+.alert {
+    color: #FF0000; }
+.warning {
+    color: #ff9800; }
 
 .infoIcon {
     color: #8e8e8e;
